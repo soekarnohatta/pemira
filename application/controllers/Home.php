@@ -74,7 +74,7 @@ class Home extends CI_Controller
         $idpemilih = $this->session->userdata('userid');
 
         // Check status sudah memilih atau belum
-        if ($this->home_model->is_voted($idpemilih)) {
+        if ($this->Home_model->is_voted($idpemilih)) {
             $data = array(
                 'nama' => $this->session->userdata('nama'),
             );
@@ -98,7 +98,7 @@ class Home extends CI_Controller
         $tipe = $this->session->userdata('level');
        
         // Check status sudah memilih atau belum
-        if ($this->home_model->is_voted($idpemilih)) {
+        if ($this->Home_model->is_voted($idpemilih)) {
             $this->session->set_flashdata(
                 'message',
                 '<div class="alert alert-warning alert-dismissible">
@@ -127,7 +127,8 @@ class Home extends CI_Controller
 
         // Update Database data
         $updateData = array(
-            'status' => 'Sudah Memilih'
+            'status' => 'Sudah Memilih',
+			'kandidats' => $idkandidat,
         );
         $this->Home_model->update('id', $idpemilih, 'data_pemilih', $updateData);
 

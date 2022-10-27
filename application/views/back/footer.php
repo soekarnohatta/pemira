@@ -1,9 +1,9 @@
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
-        <b>Version</b> 1.0.0 beta
+        <b>Rilis</b> 1.0.0 Stabil
     </div>
-    <strong>Copyright &copy; <script>
+    <strong>&copy; <script>
             document.write(new Date().getFullYear())
-        </script> <a target="_blank" href="http://naufalhakim.my.id">Naufal Hakim</a> & <a target="_blank" href="http://adminlte.io">AdminLTE.io</a>.</strong>
+        </script> <a target="_blank" href="http://landing.mpkosisalazhar19.online">Kominfotik OSIS SMAIA 19</a></strong>
     All rights reserved.
 </footer>

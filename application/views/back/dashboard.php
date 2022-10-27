@@ -8,7 +8,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Dashboard
+        Dasbor
         <small>Control panel</small>
       </h1>
       <ol class="breadcrumb">

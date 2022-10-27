@@ -8,7 +8,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Data Pemilih
+                Kandidat
                 <small>List</small>
             </h1>
             <ol class="breadcrumb">
@@ -38,7 +38,7 @@
                                                 <span class="input-group-btn">
                                                     <?php
                                                     if ($q <> '') {
-                                                        ?>
+                                                    ?>
                                                         <a href="<?php echo site_url('admin/kandidat'); ?>" class="btn btn-default">Reset</a>
                                                     <?php
                                                     }
@@ -54,7 +54,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama</th>
-                                            <th>Nourut</th>
+                                            <th>No Urut</th>
                                             <th>Suara</th>
                                             <th>Organisasi</th>
                                             <th>Visi</th>
@@ -136,11 +136,12 @@
         $('#example1').DataTable()
         $('#example2').DataTable({
             'paging': false,
+            "scrollX": true,
             'lengthChange': true,
             'searching': false,
             'ordering': true,
             'info': false,
-            'autoWidth': true
+            'autoWidth': false,
         })
     })
     // Modal Controller

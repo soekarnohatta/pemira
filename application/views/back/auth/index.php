@@ -103,16 +103,17 @@
 <script>
 	// DataTables Script
 	$(function() {
-		$('#example1').DataTable({
+		$('#example2').DataTable({
 			'info': false,
 		})
-		$('#example2').DataTable({
+		$('#example1').DataTable({
 			'paging': true,
 			'lengthChange': false,
 			'searching': false,
 			'ordering': true,
 			'info': true,
-			'autoWidth': false
+			'autoWidth': false,
+			"scrollX": true
 		})
 	})
 </script>

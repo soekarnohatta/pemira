@@ -40,7 +40,7 @@
                                                 <span class="input-group-btn">
                                                     <?php
                                                     if ($q <> '') {
-                                                        ?>
+                                                    ?>
                                                         <a href="<?php echo site_url('admin/kelas'); ?>" class="btn btn-default">Reset</a>
                                                     <?php
                                                     }
@@ -130,7 +130,8 @@
             'searching': false,
             'ordering': true,
             'info': false,
-            'autoWidth': true
+            'autoWidth': false,
+            "scrollX": true
         })
     })
 </script>

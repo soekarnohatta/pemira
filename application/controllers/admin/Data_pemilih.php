@@ -16,11 +16,13 @@ class Data_pemilih extends CI_Controller
         $this->load->library('ion_auth', 'form_validation', 'session', 'form_helper');
         $this->load->helper('url', 'language', 'form', 'file');
         $this->load->model('Data_pemilih_model');
+        $this->load->model('Dashboard_model');
 
-        if (!$this->ion_auth->logged_in()) {
+        $method = $this->router->fetch_method() ;
+        if (!$this->ion_auth->logged_in() && $method !== 'cetak') {
             // redirect them to the login page
             redirect('admin/auth/login', 'refresh');
-        } else if (!$this->ion_auth->is_admin()) // remove this elseif if you want to enable this for non-admins
+        } else if (!$this->ion_auth->is_admin() && $method !== 'cetak') // remove this elseif if you want to enable this for non-admins
         {   // redirect them to the home page because they must be an administrator to view this
             show_error('You must be an administrator to view this page.');
         }
@@ -39,7 +41,7 @@ class Data_pemilih extends CI_Controller
             $config['first_url'] = site_url() . '/admin/data_pemilih/index.html';
         }
 
-        $config['per_page'] = 10;
+        $config['per_page'] = 25;
         $config['page_query_string'] = TRUE;
         $config['total_rows'] = $this->Data_pemilih_model->total_rows($q);
         $data_pemilih = $this->Data_pemilih_model->get_limit_data($config['per_page'], $start, $q);
@@ -47,13 +49,27 @@ class Data_pemilih extends CI_Controller
         $this->load->library('pagination');
         $this->pagination->initialize($config);
 
+        // Jumlah Kelas
+        $jumlahKelas = $this->Dashboard_model->total_rows('data_pemilih');
+        // Jumlah Data Pemilih
+        $jumlahDataPemilih = $this->Dashboard_model->tampil_data('status', 'Sudah Memilih', 'data_pemilih');
+        // Jumlah Kandidat
+        $jumlahKandidat = $this->Dashboard_model->tampil_data('status', 'Belum Memilih', 'data_pemilih');
+        // Menghitung jumlah suara yang sudah masuk ke dalam database
+        $jumlahSuaraMasuk = $this->Dashboard_model->tampil_data('aktif', '0', 'data_pemilih');
+
         $data = array(
             'data_pemilih_data' => $data_pemilih,
             'q' => $q,
             'pagination' => $this->pagination->create_links(),
             'total_rows' => $config['total_rows'],
             'start' => $start,
+            'jumlahKelas' => $jumlahKelas,
+            'jumlahDataPemilih' => $jumlahDataPemilih,
+            'jumlahKandidat' => $jumlahKandidat,
+            'jumlahSuaraMasuk' => $jumlahSuaraMasuk,
         );
+
         $this->load->view('back/data_pemilih/data_pemilih_list', $data);
     }
 
@@ -70,11 +86,13 @@ class Data_pemilih extends CI_Controller
                 'password' => $row->password,
                 'nama' => $row->nama,
                 'kelas' => $getKelas->kelas,
+                'kandidats' => $row->kandidats,
                 'idkelas' => $row->idkelas,
                 'jk' => $row->jk,
                 'status' => $row->status,
                 'aktif' => $row->aktif,
             );
+
             $this->load->view('back/data_pemilih/data_pemilih_read', $data);
         } else {
             $this->session->set_flashdata(
@@ -100,6 +118,7 @@ class Data_pemilih extends CI_Controller
             'password' => set_value('password'),
             'nama' => set_value('nama'),
             'kelas' => set_value('kelas'),
+            'kandidats' => set_value('kandidats'),
             'idkelas' => set_value('idkelas'),
             'jk' => set_value('jk'),
             'status' => set_value('status'),
@@ -122,6 +141,7 @@ class Data_pemilih extends CI_Controller
             $nis = $this->input->post('nis', TRUE);
             $username = $this->input->post('username', TRUE);
             $password = $this->input->post('password', TRUE);
+            $kandidats = $this->input->post('kandidats', TRUE);
 
             if (empty($username) && empty($password)) {
                 $username = $nis;
@@ -130,6 +150,8 @@ class Data_pemilih extends CI_Controller
                 $password = $nis;
             } elseif (empty($username) && empty(!$password)) {
                 $username = $nis;
+            } elseif (empty($kandidats)) {
+                $kandidats = 'Nihil';
             }
 
             $data = array(
@@ -138,6 +160,7 @@ class Data_pemilih extends CI_Controller
                 'password' => $password,
                 'nama' => $this->input->post('nama', TRUE),
                 'kelas' => $getKelas->kelas,
+                'kandidats' => $kandidats,
                 'idkelas' => $this->input->post('kelas', TRUE),
                 'jk' => $this->input->post('jk', TRUE),
                 'status' => 'Belum Memilih',
@@ -176,12 +199,13 @@ class Data_pemilih extends CI_Controller
                 'password' => set_value('password', $row->password),
                 'nama' => set_value('nama', $row->nama),
                 'kelas' => set_value('kelas', $row->kelas),
+                'kandidats' => set_value('kandidats', $row->kandidats),
                 'idkelas' => set_value('idkelas', $row->idkelas),
                 'jk' => set_value('jk', $row->jk),
                 'status' => set_value('status', $row->status),
                 'aktif' => set_value('aktif', $row->aktif),
                 'dd_kelas' => $this->Data_pemilih_model->kelasDropdown(),
-                'kelas_selected' => $this->input->post('kelas') ? $this->input->post('kelas') : $row->idkelas, // untuk edit ganti '' menjadi data dari database misalnya $row->kelas    
+                'kelas_selected' => $this->input->post('kelas') ? $this->input->post('kelas') : $row->idkelas, // untuk edit ganti '' menjadi data dari database misalnya $row->kelas			
             );
             $this->load->view('back/data_pemilih/data_pemilih_form', $data);
         } else {
@@ -252,6 +276,7 @@ class Data_pemilih extends CI_Controller
 
         $data = array(
             'status' => 'Belum Memilih',
+            'kandidats' => 'Nihil',
         );
 
         $this->Data_pemilih_model->delete_data_vote_user($id);
@@ -280,139 +305,140 @@ class Data_pemilih extends CI_Controller
         $this->upload->initialize($config);
         $this->form_validation->set_rules('fileURL', 'Upload File', 'callback_checkFileValidation');
 
-        if (!$this->form_validation->run()) {
-            $this->import(); 
-            return;
-        }
-        if (!$this->upload->do_upload('fileURL')) {
-            return;
-        }
-
-        $upload_data = $this->upload->data();
-        $fileName = $upload_data['file_name']; //Nama File
-        $fileType = $upload_data['file_ext'];
-
-        $inputFileName = $upload_data['full_path'];
-
-        // Creating a Reader
-        if ($fileType == '.csv') {
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-        } elseif ($fileType == '.xlsx') {
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        if ($this->form_validation->run() == false) {
+            $this->import();
         } else {
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-        }
 
-        // Loading a Spreadsheet File
-        $spreadsheet = $reader->load($inputFileName);
-        $sheetData = $spreadsheet->getActiveSheet()->toArray();
+            if ($this->upload->do_upload('fileURL')) {
 
-        // menghitung jumlah baris data yang ada
-        $arrayCount = count($sheetData);
-        $flag = 0;
+                $upload_data = $this->upload->data();
+                $fileName = $upload_data['file_name']; //Nama File
+                $fileType = $upload_data['file_ext'];
 
+                $inputFileName = $upload_data['full_path'];
 
-        $createArray = array('nis', 'username', 'password', 'nama', 'kelas', 'jk');
-        $makeArray = array('nis' => 'nis', 'username' => 'username', 'password' => 'password', 'nama' => 'nama', 'kelas' => 'kelas', 'jk' => 'jk');
-        $SheetDataKey = array();
-        foreach ($sheetData as $dataInSheet) {
-            foreach ($dataInSheet as $key => $value) {
-                if (in_array(trim($value), $createArray)) {
-                    $value = preg_replace('/\s+/', '', $value);
-                    $SheetDataKey[trim($value)] = $key;
-                }
-            }
-        }
-
-        $dataDiff = array_diff_key($makeArray, $SheetDataKey);
-        if (empty($dataDiff)) {
-            $flag = 1;
-        }
-        // match excel sheet column
-        if ($flag == 1) {
-            $fetchData = array();
-            for ($i = 1; $i < $arrayCount; $i++) {
-                $nis = $SheetDataKey['nis'];
-                $userName = $SheetDataKey['username'];
-                $password = $SheetDataKey['password'];
-                $nama = $SheetDataKey['nama'];
-                $kelas = $SheetDataKey['kelas'];
-                $jk = $SheetDataKey['jk'];
-
-                $nis = filter_var(trim($sheetData[$i][$nis]), FILTER_SANITIZE_STRING);
-                $userName = filter_var(trim($sheetData[$i][$userName]), FILTER_SANITIZE_STRING);
-                $password = filter_var(trim($sheetData[$i][$password]), FILTER_SANITIZE_STRING);
-                $nama = filter_var(trim($sheetData[$i][$nama]), FILTER_SANITIZE_STRING);
-                $kelas = filter_var(trim($sheetData[$i][$kelas]), FILTER_SANITIZE_STRING);
-                $jk = filter_var(trim($sheetData[$i][$jk]), FILTER_SANITIZE_STRING);
-
-                // Get idkelas
-                $idKelas = $this->Data_pemilih_model->get_idKelas($kelas);
-                if ($idKelas == false) {
-                    $idKelas = '';
+                // Creating a Reader
+                if ($fileType == '.csv') {
+                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                } elseif ($fileType == '.xlsx') {
+                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
                 } else {
-                    $idKelas = $idKelas->idkelas;
+                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
                 }
 
-                // Check duplicate
-                $exist = $this->Data_pemilih_model->is_exist($userName, $nis);
-                if($exist) { continue; }
+                // Loading a Spreadsheet File
+                $spreadsheet = $reader->load($inputFileName);
+                $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
-                $fetchData[] = array(
-                    'nis' => $nis,
-                    'username' => $userName,
-                    'password' => $password,
-                    'nama' => $nama,
-                    'kelas' => $kelas,
-                    'jk' => $jk,
-                    'status' => 'Belum Memilih',
-                    'aktif' => '1',
-                    'idkelas' => $idKelas,
-                );
-            }
+                // menghitung jumlah baris data yang ada
+                $arrayCount = count($sheetData);
+                $flag = 0;
 
-            $dups = [];
-            foreach($fetchData as $keys => $val){
-                $res = searchForUsername($val['username'], $fetchData);
-                if(count($res) > 1){
-                    $dups[] = $res;
+
+                $createArray = array('nis', 'username', 'password', 'nama', 'kelas', 'jk', 'kandidats');
+                $makeArray = array('nis' => 'nis', 'username' => 'username', 'password' => 'password', 'nama' => 'nama', 'kelas' => 'kelas', 'jk' => 'jk', 'kandidats' => 'kandidats');
+                $SheetDataKey = array();
+                foreach ($sheetData as $dataInSheet) {
+                    foreach ($dataInSheet as $key => $value) {
+                        if (in_array(trim($value), $createArray)) {
+                            $value = preg_replace('/\s+/', '', $value);
+                            $SheetDataKey[trim($value)] = $key;
+                        }
+                    }
                 }
-            }
 
-            if(!empty($dups)){
-                $data['dataInfo'] = $fetchData;
-                $this->Data_pemilih_model->setBatchImport($fetchData);
-                $this->Data_pemilih_model->importData();
+                $dataDiff = array_diff_key($makeArray, $SheetDataKey);
+                if (empty($dataDiff)) {
+                    $flag = 1;
+                }
+                // match excel sheet column
+                if ($flag == 1) {
+                    $fetchData = array();
+                    for ($i = 1; $i < $arrayCount; $i++) {
+                        $nis = $SheetDataKey['nis'];
+                        $userName = $SheetDataKey['username'];
+                        $password = $SheetDataKey['password'];
+                        $nama = $SheetDataKey['nama'];
+                        $kelas = $SheetDataKey['kelas'];
+                        $jk = $SheetDataKey['jk'];
+                        $kandidats = $SheetDataKey['kandidats'];
+
+                        $nis = filter_var(trim($sheetData[$i][$nis]), FILTER_SANITIZE_STRING);
+                        $userName = filter_var(trim($sheetData[$i][$userName]), FILTER_SANITIZE_STRING);
+                        $password = filter_var(trim($sheetData[$i][$password]), FILTER_SANITIZE_STRING);
+                        $nama = filter_var(trim($sheetData[$i][$nama]), FILTER_SANITIZE_STRING);
+                        $kelas = filter_var(trim($sheetData[$i][$kelas]), FILTER_SANITIZE_STRING);
+                        $jk = filter_var(trim($sheetData[$i][$jk]), FILTER_SANITIZE_STRING);
+                        $kandidats = filter_var(trim($sheetData[$i][$kandidats]), FILTER_SANITIZE_STRING);
+
+                        if ($userName != "") {
+                            // Get idkelas
+                        $idKelas = $this->Data_pemilih_model->get_idKelas($kelas);
+                        if ($idKelas == false) {
+                            $idKelas = '';
+                        } else {
+                            $idKelas = $idKelas->idkelas;
+                        }
+                        $fetchData[] = array(
+                            'nis' => $nis,
+                            'username' => $userName,
+                            'password' => $password,
+                            'nama' => $nama,
+                            'kelas' => $kelas,
+                            'kandidats' => $kandidats,
+                            'jk' => $jk,
+                            'status' => 'Belum Memilih',
+                            'aktif' => '1',
+                            'idkelas' => $idKelas,
+                        );
+                        }
+                    }
+
+                    $dups = [];
+                    foreach ($fetchData as $keys => $val) {
+                        $res = searchForUsername($val['username'], $fetchData);
+                        if (count($res) > 1) {
+                            $dups[] = $res;
+                        }
+                    }
+
+                   if (!empty($dups)) {
+                        $data['dataInfo'] = $fetchData;
+                        $this->Data_pemilih_model->setBatchImport($fetchData);
+                        $this->Data_pemilih_model->importData();
+                        $this->session->set_flashdata(
+                            'message',
+                            '<div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            Terdapat username ganda silahkan cek kembali data anda! </div>'
+                        );
+                        unlink('./assets/uploads/' . $fileName);
+                        redirect('admin/pemilih', 'refresh');
+                    } else {
+                        $data['dataInfo'] = $fetchData;
+                        $this->Data_pemilih_model->setBatchImport($fetchData);
+                        $this->Data_pemilih_model->importData();
+                    }
+                    
+                } else {
+                    $this->session->set_flashdata(
+                        'message',
+                        '<div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        Please import correct file, did not match excel sheet column </div>'
+                    );
+                    unlink('./assets/uploads/' . $fileName);
+                }
+                unlink('./assets/uploads/' . $fileName);
                 $this->session->set_flashdata(
                     'message',
-                    '<div class="alert alert-danger alert-dismissible">
+                    '<div class="alert alert-success alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    Terdapat username ganda silahkan cek kembali data anda! </div>'
+                    Berhasil Mengimport Data </div>'
                 );
-                unlink('./assets/uploads/' . $fileName);
                 redirect('admin/pemilih', 'refresh');
-            } else {
-                $data['dataInfo'] = $fetchData;
-                $this->Data_pemilih_model->setBatchImport($fetchData);
-                $this->Data_pemilih_model->importData();
             }
-        } else {
-            $this->session->set_flashdata(
-                'message',
-                '<div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                Please import correct file, did not match excel sheet column </div>'
-            );
-            unlink('./assets/uploads/' . $fileName);
         }
-        unlink('./assets/uploads/' . $fileName);
-        $this->session->set_flashdata(
-            'message',
-            '<div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            Berhasil Mengimport Data </div>'
-        );
-        redirect('admin/pemilih', 'refresh');
     }
 
     /**
@@ -429,11 +455,11 @@ class Data_pemilih extends CI_Controller
         $spreadsheet = new Spreadsheet();
 
         // Set document properties
-        $spreadsheet->getProperties()->setCreator('System - System21')
+        $spreadsheet->getProperties()->setCreator('Kominfotik OSIS - SMAIA 19')
             ->setLastModifiedBy('System21')
             ->setTitle('Data Pemilih')
             ->setSubject('Data Pemilih')
-            ->setDescription('Data Pemilih - Generate by System21');
+            ->setDescription('Data Pemilih - Generated by Nayef');
 
         // Add some data
         $spreadsheet->setActiveSheetIndex(0)
@@ -442,7 +468,8 @@ class Data_pemilih extends CI_Controller
             ->setCellValue('C1', 'password')
             ->setCellValue('D1', 'nama')
             ->setCellValue('E1', 'kelas')
-            ->setCellValue('F1', 'jk');
+            ->setCellValue('F1', 'jk')
+            ->setCellValue('G1', 'kandidats');
 
         // Miscellaneous glyphs, UTF-8
         $i = 2;
@@ -454,7 +481,8 @@ class Data_pemilih extends CI_Controller
                 ->setCellValue('C' . $i, $dataPemilih->password)
                 ->setCellValue('D' . $i, $dataPemilih->nama)
                 ->setCellValue('E' . $i, $dataPemilih->kelas)
-                ->setCellValue('F' . $i, $dataPemilih->jk);
+                ->setCellValue('F' . $i, $dataPemilih->jk)
+                ->setCellValue('G' . $i, $dataPemilih->kandidats);
             $i++;
         }
 
@@ -553,6 +581,7 @@ class Data_pemilih extends CI_Controller
                 'password' => $this->input->post('password', TRUE),
                 'nama' => $this->input->post('nama', TRUE),
                 'kelas' => $getKelas->kelas,
+                //'kandidats' => $this->input->post('kandidats', TRUE),
                 'idkelas' => $this->input->post('kelas'),
                 'jk' => $this->input->post('jk', TRUE),
             );

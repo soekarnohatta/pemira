@@ -150,11 +150,19 @@
                 <td>
                     <!--*** CONTENT GOES HERE ***-->
                     <div class="page text-justify">
-                        <div style="text-align: center">
-                            <h4 style="font-weight: bolder;">DATA PEMILIH</h4>
-                            <h4 style="font-weight: bolder;">PESERTA PEMUNGUTAN DAN PENGHITUNGAN SUARA</h4>
+                        <div >
+                        
+
+<img alt="logo" height="50" src="/assets/img/logo-pus.png" href="/">
+                        <div style="text-align: left; display:inline-block!important;">
+                            <h4 style="font-weight: bolder;">DATA PEMILIH TERPADU</h4>
+                            <h4 style="font-weight: bolder;">PESERTA PEMIRA KETUA DAN WAKIL KETUA OSIS</h4>
                             <h4 style="font-weight: bolder;"><?php echo $setting_data->penyelenggara; ?> </h4>
                         </div>
+                
+                        </div>
+                    
+                       
                         </br>
                         <table class="table">
                             <thead>
@@ -165,6 +173,7 @@
                                     <th>Kelas</th>
                                     <th width="25px">L/P</th>
                                     <th>Status</th>
+                                    <th>Kandidat Terpilih</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -176,6 +185,15 @@
                                         <td style="text-align: center"><?php echo htmlspecialchars($data_pemilih->kelas, ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td width="10px" style="text-align: center"><?php echo htmlspecialchars($data_pemilih->jk, ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td style="text-align: center"><?php echo $data_pemilih->status ?></td>
+                                        <td style="text-align: center"><?php 
+                                        $getKs = $this->Data_pemilih_model->getKandidats($data_pemilih->kandidats);
+                                        $getK = '';
+                                        if (!$getKs) {
+                                            $getK = 'Nihil';
+                                        } else {
+                                            $getK = $getKs->nama;
+                                        }
+                                        echo $getK ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

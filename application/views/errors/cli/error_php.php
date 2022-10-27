@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-A PHP Error was encountered
+Duh PHP nya error gan, kontak Nayef gih biar dibenerin!
 
 Severity:    <?php echo $severity, "\n"; ?>
 Message:     <?php echo $message, "\n"; ?>

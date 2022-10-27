@@ -39,6 +39,7 @@ class Data_pemilih_model extends CI_Model
         $this->db->or_like('password', $q);
         $this->db->or_like('nama', $q);
         $this->db->or_like('kelas', $q);
+		$this->db->or_like('kandidats', $q);
         $this->db->or_like('idkelas', $q);
         $this->db->or_like('jk', $q);
         $this->db->or_like('status', $q);
@@ -57,6 +58,7 @@ class Data_pemilih_model extends CI_Model
         $this->db->or_like('password', $q);
         $this->db->or_like('nama', $q);
         $this->db->or_like('kelas', $q);
+		$this->db->or_like('kandidats', $q);
         $this->db->or_like('idkelas', $q);
         $this->db->or_like('jk', $q);
         $this->db->or_like('status', $q);
@@ -132,6 +134,21 @@ class Data_pemilih_model extends CI_Model
             return false;
         }
     }
+	
+	function getKandidats($id)
+    {
+        $q = $this->db->select('data_pemilih.kandidats, kandidat.*')
+            ->join('kandidat', 'data_pemilih.kandidats = kandidat.idkandidat')
+            ->where(['data_pemilih.kandidats' => $id])
+            ->get('data_pemilih');
+        // return ($q->num_rows() > 0) ? $q->row() : row();
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        } else {
+            return false;
+        }
+    }
+
 
     // get_idKelas
     function get_idKelas($kelas)
@@ -190,24 +207,6 @@ class Data_pemilih_model extends CI_Model
         $this->db->delete('data_pemilihan');
         return true;
         
-    }
-
-    /**
-     * Check if exist user
-     * @param   string  username
-     * @param   string  nis
-     * @return  boolean
-     */
-    public function is_exist($username, $nis)
-    {
-        $this->db->where('username', $username);
-        $this->db->or_where('nis', $nis);
-        $q = $this->db->get('data_pemilih');
-        if($q->num_rows() > 0){
-            return true;
-        }
-
-        return false;
     }
 }
 

@@ -1,4 +1,6 @@
-<?php $this->load->view('back/meta') ?>
+<?php $this->load->view('back/meta');
+error_reporting(-1);
+ini_set('display_errors', 'On'); ?>
 
 <div class="wrapper">
     <?php $this->load->view('back/head') ?>

@@ -39,13 +39,17 @@
                                         <td><strong>Kelas</strong></td>
                                         <td><?php print_r($kelas); ?></td>
                                     </tr>
+									 <tr>
+                                        <td><strong>Knddt Trplh</strong></td>
+                                        <td><?php print_r($kandidats); ?></td>
+                                    </tr>
                                     <tr>
                                         <td><strong>L/P</strong></td>
                                         <td><?php echo $jk; ?></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Status</strong></td>
-                                        <td><a class="label label-success"><?php echo $status; ?></a></td>
+                                        <td><?php echo ($status === 'Belum Memilih') ? anchor("admin/pemilih", 'Belum Memilih', 'class="label label-danger"') : anchor("admin/pemilih", 'Sudah Memilih', 'class="label label-success"'); ?></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Aktif</strong></td>

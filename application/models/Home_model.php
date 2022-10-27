@@ -46,8 +46,8 @@ class Home_model extends CI_Model
         $this->db->where($q, $idkandidat);
         return $this->db->count_all_results($table);
     }
-
-    // Check sudah memilih atau belum
+	
+	// Check sudah memilih atau belum
     public function is_voted($idpemilih)
     {
         $result = $this->get_by_id('id', $idpemilih, 'data_pemilih');

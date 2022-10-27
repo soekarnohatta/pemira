@@ -8,10 +8,10 @@
 <body>
     <div class="container text-center" style="margin-top: 20vh">
         <h1 class="display-3">Terima Kasih!</h1>
-        <p class="lead"><strong>Anda sudah menggunkan hak pilih anda</strong><br>Auto redirect to Homepage in <span id="time"></span></p>
+        <p class="lead"><strong>Anda sudah menggunakan hak pilih anda</strong><br>Kembali ke laman utama dalam <span id="time"></span></p>
         <hr>
         <p class="lead">
-            <a class="btn btn-primary btn-sm" href="<?php echo site_url('user/userauth/logout') ?>" role="button">Continue to homepage</a>
+            <a class="btn btn-primary btn-sm" href="<?php echo site_url('user/userauth/logout') ?>" role="button">Laman utama</a>
         </p>
     </div>
 

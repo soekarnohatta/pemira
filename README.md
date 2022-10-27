@@ -1,6 +1,12 @@
-# eVoting
+# eVoting - Modifikasi
 
-Aplikasi ini dibuat untuk meningkatkan kesadaran akan pentingnya menggunakan hak pilih kita dalam demokrasi di dunia yang modern ini.
+Aplikasi ini dibuat untuk agar supaya pemilihan ketua OSIS secara elektronik dapat terlaksana tiap tahunnya sebagaimana 27 Oktober 2022 dan untuk agar supaya tidak repot mencari aplikasi ini di diska lepas ketia dimintanya setiap tahun.
+
+Ujicoba dapat melalui https://s.ub.ac.id/EvoteSMAIA19
+
+![Home](/assets/img/HomePage.JPG "Home")
+![Login](/assets/img/LoginPage.JPG "Login")
+![Admin](/assets/img/Admin.JPG "Admin")
 
 # Server Requierment
 
