@@ -101,7 +101,7 @@ class Kandidat extends CI_Controller
     public function create_action()
     {
         $config['upload_path'] = './assets/uploads/kandidat';
-        $config['allowed_types'] = 'jpg|png|gif';
+        $config['allowed_types'] = 'jpg|jpeg|png|gif';
         $config['remove_spaces'] = TRUE;
 
         $this->load->library('upload', $config);
@@ -177,7 +177,7 @@ class Kandidat extends CI_Controller
     public function update_action()
     {
         $config['upload_path'] = './assets/uploads/kandidat';
-        $config['allowed_types'] = 'jpg|png|gif';
+        $config['allowed_types'] = 'jpg|jpeg|png|gif';
         $config['remove_spaces'] = TRUE;
 
         $this->load->helper('file');
