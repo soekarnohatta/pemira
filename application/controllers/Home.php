@@ -24,7 +24,6 @@ class Home extends CI_Controller
 
     /**
      * Constructor
-     * 
      * @return  void
      */
     public function __construct()
