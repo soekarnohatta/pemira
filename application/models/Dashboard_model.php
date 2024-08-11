@@ -6,11 +6,6 @@ class Dashboard_model extends CI_Model
     public $id = 'id';
     public $order = 'ASC';
 
-    function __construct()
-    {
-        parent::__construct();
-    }
-
     // Get All
     public function get_all($q, $table)
     {
