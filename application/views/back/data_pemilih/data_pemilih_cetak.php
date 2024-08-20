@@ -157,7 +157,6 @@
                         <div style="text-align: left; display:inline-block!important;">
                             <h4 style="font-weight: bolder;">DATA PEMILIH TERPADU</h4>
                             <h4 style="font-weight: bolder;">PESERTA PEMIRA KETUA DAN WAKIL KETUA OSIS</h4>
-                            <h4 style="font-weight: bolder;"><?php echo $setting_data->penyelenggara; ?> </h4>
                         </div>
                 
                         </div>

@@ -46,8 +46,11 @@ class Laporan extends CI_Controller
 
   public function daftar_hadir()
   {
+    //$q = urldecode($this->input->get('q', TRUE));
+    //$start = intval($this->input->get('start'));
+    //$data_pemilih = $this->Data_pemilih_model->get_limit_data($config['per_page'], $start, $q);
     $data = array(
-      "data_pemilih" => $data_pemilih,
+     // "data_pemilih" => $data_pemilih,
       "start" => 0,
       "dataku" => array(
         "url" => site_url(),

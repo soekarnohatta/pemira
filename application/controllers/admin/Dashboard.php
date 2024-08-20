@@ -50,12 +50,13 @@ class Dashboard extends CI_Controller
         $this->session->set_userdata($username);
 
         // Jumlah Kelas
+    
         $jumlahKelas = $this->Dashboard_model->total_rows('kelas');
         // Jumlah Data Pemilih
         $jumlahDataPemilih = $this->Dashboard_model->total_rows('data_pemilih');
         // Jumlah Kandidat
         $jumlahKandidat = $this->Dashboard_model->total_rows('kandidat');
-        // Menghitung jumlah suara yang sudah masuk ke dalam database
+        //// Menghitung jumlah suara yang sudah masuk ke dalam database
         $jumlahSuaraMasuk = $this->Dashboard_model->total_rows('data_pemilihan');
         // Mengambil semua kandidat data
         $kandidatData = $this->Dashboard_model->get_all('nourut', 'kandidat');

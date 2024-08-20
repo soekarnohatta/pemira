@@ -2,6 +2,7 @@ version: '3.3'
 
 services:
   caddy:
+    platform: linux/amd64
     container_name: caddy
     image: caddy
     restart: unless-stopped
@@ -24,7 +25,7 @@ services:
     depends_on:
       - database
   database:
-    image: mysql:5.7
+    image: mariadb:10.5.8
     ports:
       - 3306:3306
     environment:

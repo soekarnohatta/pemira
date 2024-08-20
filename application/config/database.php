@@ -7,10 +7,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'mpkh8813_evote',
-	'password' => 'pearlharbour20',
-	'database' => 'mpkh8813_evote',
+	'hostname' => 'database',
+	'username' => 'ci',
+	'password' => 'ci',
+	'database' => 'evoting',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

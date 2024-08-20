@@ -153,7 +153,6 @@
                         <div style="text-align: center">
                             <h4 style="font-weight: bolder;">DAFTAR HADIR</h4>
                             <h4 style="font-weight: bolder;">PESERTA PEMIRA KETUA DAN WAKIL KETUA OSIS</h4>
-                            <h4 style="font-weight: bolder;"><?php echo $penyelenggara; ?> </h4>
                         </div>
                         </br>
                         <table class="table">

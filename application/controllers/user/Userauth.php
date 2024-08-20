@@ -65,6 +65,7 @@ class Userauth extends CI_Controller
         }
 
         // Check apakah sudah waktunya pemilihan
+        /*
         if(!$this->check_waktu()) {
             $this->session->set_flashdata(
                 'message',
@@ -72,6 +73,7 @@ class Userauth extends CI_Controller
             );
             return redirect('user/userauth', 'refresh');
         }
+            */
 
         // Define var dari login.php
         $username = $this->input->post('username');
